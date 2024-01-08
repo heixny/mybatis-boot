@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.OptionMapper">
+	<select id="getmtOptions" resultType="com.gec.domain.Option">
+        select typeNo,typeName,ruleNo as value
+		from meterial_type
+    </select>
+    <select id="getmsOptions" resultType="com.gec.domain.Option">
+        select secondaryNo,secondaryName,ruleNo as value
+		from meterial_secondary
+    </select>
+    <select id="getmgOptions" resultType="com.gec.domain.Option">
+        select groupNo,groupName,ruleNo as value
+		from meterial_group
+    </select>
+    <select id="getwaretypeOptions" resultType="com.gec.domain.Option">
+        select typeName,typeNo as value from ware_type
+    </select>
+    <select id="getwareOptions" resultType="com.gec.domain.Option">
+        select wareName as text,wareNo as value from ware_house
+    </select>
+    <select id="getareaOptions" resultType="com.gec.domain.Option">
+        select areaName as text,areaNo as value from ware_workarea
+    </select>
+    <select id="getpositionOptions" resultType="com.gec.domain.Option">
+        select positionName as text,positionNo as value from ware_position
+    </select>
+</mapper>

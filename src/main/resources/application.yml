@@ -1,0 +1,90 @@
+spring:
+  profiles:
+    active: dev
+#开发：dev  部署：prod
+---
+#开发环境
+server:
+  servlet:
+    context-path: /WmsBoot
+  port: 8082
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wms?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password:
+  jpa:
+    show-sql: true
+    redis:
+      timeout: 10000
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      #password:
+      lettuce:
+        pool:
+          min-idle: 50
+          max-wait: 2000
+          max-idle: 100
+          max-active: 1024
+  profiles: dev
+#配置springboot数据源
+mybatis:
+#  mapper的路径
+  mapper-locations:
+    - classpath:mybatis/mappers/*.xml
+#  mybatis的配置文件
+  config-location: classpath:mybatis/mybatis.cfg.xml
+#  结果集转换成对象 扫描哪个包
+  type-aliases-package: com.gec.domain
+#配置Mybatis日志输出
+logging:
+  level:
+    - com.gec.mapper: debug
+---
+#部署环境
+server:
+  servlet:
+    context-path: /WmsBoot
+  port: 8082
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    #localhost修改为云服务器ip
+    url: jdbc:mysql://localhost:3306/wms?useUnicode=true&characterEncoding=UTF-8
+    username: root1
+    password: xLXT4sA7rjdyDayt
+  jpa:
+    show-sql: true
+    #redis的host和云服务器上的redis.conf都需要修改
+    redis:
+      timeout: 10000
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      #password:
+      lettuce:
+        pool:
+          min-idle: 50
+          max-wait: 2000
+          max-idle: 100
+          max-active: 1024
+  profiles: prod
+#配置springboot数据源
+mybatis:
+  #  mapper的路径
+  mapper-locations:
+    - classpath:mybatis/mappers/*.xml
+  #  mybatis的配置文件
+  config-location: classpath:mybatis/mybatis.cfg.xml
+  #  结果集转换成对象 扫描哪个包
+  type-aliases-package: com.gec.domain
+#配置Mybatis日志输出
+logging:
+  level:
+    - com.gec.mapper: debug

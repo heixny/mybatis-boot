@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.MeterialTypeMapper">
+	<select id="getMeterialTypeById" resultType="java.lang.Integer">
+        select id from meterial_type
+        order by id desc limit 1
+    </select>
+    <select id="getList" resultType="com.gec.domain.MeterialType">
+        select mt.*,u.userName from meterial_type mt
+        inner join user u
+        on u.id=mt.inputerId
+        <where>
+            <if test="typeNo!=null">
+                and typeNo like "%"#{typeNo}"%"
+            </if>
+            <if test="typeName!=null">
+                and typeName like "%"#{typeName}"%"
+            </if>
+            <if test="ruleNo!=null">
+                and ruleNo like "%"#{ruleNo}"%"
+            </if>
+        </where>
+    </select>
+    <insert id="addMeterialType">
+        insert into meterial_type(
+            typeNo,typeName,typeDesc,ruleNo,
+            inputerId,createDate
+        )
+        values(#{typeNo},#{typeName},#{typeDesc},#{ruleNo},
+        #{inputerId},now())
+    </insert>
+    <update id="updateMeterialType">
+        update meterial_type
+        <set>
+            <if test="typeNo!=null">
+                typeNo=#{typeNo},
+            </if>
+            <if test="typeName!=null">
+                typeName=#{typeName},
+            </if>
+            <if test="typeDesc!=null">
+                typeDesc=#{typeDesc},
+            </if>
+            <if test="ruleNo!=null">
+                ruleNo=#{ruleNo},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delMeterialType">
+        delete from meterial_type where id=#{id}
+    </delete>
+</mapper>

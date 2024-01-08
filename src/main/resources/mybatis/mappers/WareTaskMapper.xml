@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.WareTaskMapper">
+
+    <select id="getList" resultType="com.gec.domain.InWareTask">
+        select iwt.*,u.userName from in_ware_task iwt
+        left join user u
+        on u.id=iwt.inputerId
+        where receiverId=#{receiverId}
+    </select>
+
+    <update id="updateReceiver">
+        update in_ware_task set
+        receiverId=#{receiverId},step=#{step}
+        <if test="setTime=='true'">
+            ,InwareTime = now(),status='已完成'
+        </if>
+        where orderNo=#{orderNo}
+    </update>
+
+    <insert id="addWareTask">
+        insert into in_ware_task(
+            orderNo,serviceType,receiverId,inputerId,
+            sourceType,sourceNo,requireTime,step,status
+        )values (#{orderNo},#{serviceType},#{receiverId},#{inputerId},
+            #{sourceType},#{sourceNo},now(),#{step},#{status})
+    </insert>
+    
+</mapper>

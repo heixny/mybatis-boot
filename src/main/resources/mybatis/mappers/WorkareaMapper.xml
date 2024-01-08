@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.WorkareaMapper">
+    <select id="getList" resultType="com.gec.domain.Workarea">
+        select ww.*,wh.wareName,u.userName from ware_workarea ww
+        left join ware_house wh
+        on wh.wareNo=ww.wareNo
+        left join user u
+        on u.id=ww.inputer
+        <where>
+            <if test="areaNo!=null">
+                and areaNo like "%"#{areaNo}"%"
+            </if>
+            <if test="areaName!=null">
+                and areaName like "%"#{areaName}"%"
+            </if>
+        </where>
+    </select>
+    <select id="getWorkareaById" resultType="java.lang.Integer">
+        select id from ware_workarea
+        order by id desc limit 1
+    </select>
+    <insert id="addWorkarea">
+        insert into ware_workarea(
+            areaNo,areaName,areaDesc,wareNo,
+            inputer,createDate
+        )
+        values(#{areaNo},#{areaName},#{areaDesc},#{wareNo},
+        #{inputer},now())
+    </insert>
+    <update id="updateWorkarea">
+        update ware_workarea
+        <set>
+            <if test="areaNo!=null">
+                areaNo=#{areaNo},
+            </if>
+            <if test="areaName!=null">
+                areaName=#{areaName},
+            </if>
+            <if test="areaDesc!=null">
+                areaDesc=#{areaDesc},
+            </if>
+            <if test="wareNo!=null">
+                wareNo=#{wareNo},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delWorkarea">
+        delete from ware_workarea where id=#{id}
+    </delete>
+</mapper>

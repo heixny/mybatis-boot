@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.WarehouseMapper">
+    <select id="getList" resultType="com.gec.domain.Warehouse">
+        select wh.*,u.userName,wt.typeName from ware_house wh
+        left join user u
+        on u.id=wh.inputerId
+        left join ware_type wt
+        on wt.typeNo=wh.typeNo
+        <where>
+            <if test="wareNo!=null">
+                and wh.wareNo like "%" #{wareNo} "%"
+            </if>
+        </where>
+    </select>
+    <insert id="addWarehouse">
+        insert into ware_house(
+            id,wareNo,wareName,typeNo,wareDesc,
+            inputerId,createDate
+        )
+        values (#{id},#{wareNo},#{wareName},#{typeNo},#{wareDesc}
+        ,#{inputerId},now())
+    </insert>
+    <update id="updateWarehouse">
+        update ware_house
+        <set>
+            <if test="wareNo!=null">
+                wareNo=#{wareNo},
+            </if>
+            <if test="wareName!=null">
+                wareName=#{wareName},
+            </if>
+            <if test="typeNo!=null">
+                typeNo=#{typeNo},
+            </if>
+            <if test="wareDesc!=null">
+                wareDesc=#{wareDesc},
+            </if>
+            <if test="inputerId!=null">
+                inputerId=#{inputerId}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delWarehouse">
+        delete from ware_house where id=#{id}
+    </delete>
+
+</mapper>

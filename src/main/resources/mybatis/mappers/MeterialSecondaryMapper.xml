@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.MeterialSecondaryMapper">
+	<select id="getMeterialSecondaryById" resultType="java.lang.Integer">
+        select id from meterial_secondary
+        order by id desc limit 1
+    </select>
+    <select id="getList" resultType="com.gec.domain.MeterialSecondary">
+        select mt.*,u.userName from meterial_secondary mt
+        inner join user u
+        on u.id=mt.inputerId
+        <where>
+            <if test="secondaryNo!=null">
+                and secondaryNo like "%"#{secondaryNo}"%"
+            </if>
+            <if test="secondaryName!=null">
+                and secondaryName like "%"#{secondaryName}"%"
+            </if>
+            <if test="ruleNo!=null">
+                and ruleNo like "%"#{ruleNo}"%"
+            </if>
+        </where>
+    </select>
+    <insert id="addMeterialSecondary">
+        insert into meterial_secondary(
+            secondaryNo,secondaryName,typeDesc,ruleNo,
+            inputerId,createDate
+        )
+        values(#{secondaryNo},#{secondaryName},#{typeDesc},#{ruleNo},
+        #{inputerId},now())
+    </insert>
+    <update id="updateMeterialSecondary">
+        update meterial_secondary
+        <set>
+            <if test="secondaryNo!=null">
+                secondaryNo=#{secondaryNo},
+            </if>
+            <if test="secondaryName!=null">
+                secondaryName=#{secondaryName},
+            </if>
+            <if test="typeDesc!=null">
+                typeDesc=#{typeDesc},
+            </if>
+            <if test="ruleNo!=null">
+                ruleNo=#{ruleNo},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delMeterialSecondary">
+        delete from meterial_secondary where id=#{id}
+    </delete>
+</mapper>

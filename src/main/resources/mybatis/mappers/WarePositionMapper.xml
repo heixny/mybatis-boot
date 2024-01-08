@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.WarePositionMapper">
+    <select id="getList" resultType="com.gec.domain.WarePosition">
+        select wp.*,wh.wareName,u.userName,ww.areaName from ware_position wp
+        left join ware_house wh
+        on wh.wareNo=wp.wareNo
+        left join user u
+        on u.id=wp.inputer
+        left join ware_workarea ww
+        on ww.areaNo=wp.areaNo
+        <where>
+            <if test="positionNo!=null">
+                and positionNo like "%"#{positionNo}"%"
+            </if>
+            <if test="positionName!=null">
+                and positionName like "%"#{positionName}"%"
+            </if>
+        </where>
+    </select>
+    <select id="getWarePositionById" resultType="java.lang.Integer">
+        select id from ware_position
+        order by id desc limit 1
+    </select>
+    <insert id="addWarePosition">
+        insert into ware_position(
+            positionNo,positionName,positionDesc,wareNo,
+            areaNo,enable,inputer,createDate
+        )
+        values(#{positionNo},#{positionName},#{positionDesc},#{wareNo},
+        #{areaNo},#{enable},#{inputer},now())
+    </insert>
+    <update id="updateWarePosition">
+        update ware_position
+        <set>
+            <if test="positionNo!=null">
+                positionNo=#{positionNo},
+            </if>
+            <if test="positionName!=null">
+                positionName=#{positionName},
+            </if>
+            <if test="positionDesc!=null">
+                positionDesc=#{positionDesc},
+            </if>
+            <if test="wareNo!=null">
+                wareNo=#{wareNo},
+            </if>
+            <if test="areaNo!=null">
+                areaNo=#{areaNo},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delWarePosition">
+        delete from ware_position where id=#{id}
+    </delete>
+</mapper>

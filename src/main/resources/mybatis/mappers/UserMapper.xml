@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.UserMapper">
+    <select id="getList" resultType="com.gec.domain.User">
+        select * from user
+        <where>
+            <if test="account!=null">
+                and account like "%"#{account}"%"
+            </if>
+            <if test="userName!=null">
+                and userName like "%"#{userName}"%"
+            </if>
+            <if test="sex!=null">
+                and sex like "%"#{sex}"%"
+            </if>
+            <if test="no!=null">
+                and no like "%"#{no}"%"
+            </if>
+        </where>
+    </select>
+    <select id="getUserByAccount" resultType="com.gec.domain.User">
+        select * from user
+        where account=#{account}
+    </select>
+    <select id="getUserById" resultType="com.gec.domain.User">
+        select * from user
+        where id=#{id}
+    </select>
+<!-- 改数据库时将nickName改为userName -->
+    <insert id="addUser">
+        insert into user(
+			id,account,userName,password,
+			no,sex,createDate
+		)
+		values(#{id},#{account},#{userName}
+		,#{password},#{no},#{sex},now());
+    </insert>
+    <insert id="updateUser">
+        update user
+        <set>
+            <if test="userName!=null">
+                userName=#{userName},
+            </if>
+            <if test="password!=null">
+                password=#{password},
+            </if>
+            <if test="deptId!=null">
+                deptId=#{deptId},
+            </if>
+            <if test="no!=null">
+                no=#{no},
+            </if>
+            <if test="sex!=null">
+                sex=#{sex}
+            </if>
+        </set>
+        where id=#{id}
+    </insert>
+    <delete id="delUser">
+        delete from user where id=#{id}
+    </delete>
+
+    <select id="getLeader" resultType="com.gec.domain.User">
+        select u.* from user u
+        left join user_role ur
+        on ur.user_id=u.id
+        left join dept d
+        on d.id=u.deptId
+        where ur.role_id=#{roleId} and d.id=#{deptId}
+    </select>
+
+</mapper>

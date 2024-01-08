@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.TaskMapper">
+	<insert id="addTask">
+        insert into in_ware_order_task (id,status,nodeType,inwareOrderNo
+        ,commitTime,assigneeId,step) values
+        ("1","已完成","start",#{arg0},now(),"sys",1),
+        ("2","已完成","userTask",#{arg0},now(),#{arg1},2),
+        ("3","待执行","userTask",#{arg0},null,null,3),
+        ("4","待执行","userTask",#{arg0},null,"u03",4),
+        ("5","待执行","end",#{arg0},null,"sys",5)
+    </insert>
+
+    <update id="updateAssineeId">
+        update in_ware_order_task set
+        assigneeId=#{arg2}
+        where inwareOrderNo=#{arg0} and
+        step=#{arg1}
+    </update>
+    <update id="updateStatus">
+        update in_ware_order_task set
+        status=#{status}
+        <if test="setTime=='true'">
+            , commitTime = now()
+        </if>
+        where inwareOrderNo=#{orderNo} and
+        step=#{step}
+    </update>
+    <select id="getTask" resultType="com.gec.domain.OrderTask">
+        select * from in_ware_order_task
+        where inwareOrderNo=#{orderNo} and
+        step=#{step}
+    </select>
+
+    <sql id="fields">
+		id, status, nodeType,
+		inwareOrderNo, commitTime,
+		assigneeId, step
+	</sql>
+
+    <insert id="initTask">
+        insert into in_ware_order_task(
+        <include refid="fields" />
+        ) values
+        <foreach collection="list"
+                 item="task" separator=",">
+            ( null, #{task.status}, #{task.nodeType},
+            #{task.inwareOrderNo}, #{task.commitTime},
+            #{task.assigneeId}, #{task.step} )
+        </foreach>
+    </insert>
+
+</mapper>

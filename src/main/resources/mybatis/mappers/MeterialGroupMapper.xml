@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.MeterialGroupMapper">
+	<select id="getMeterialGroupById" resultType="java.lang.Integer">
+        select id from meterial_group
+        order by id desc limit 1
+    </select>
+    <select id="getList" resultType="com.gec.domain.MeterialGroup">
+        select mt.*,u.userName from meterial_group mt
+        inner join user u
+        on u.id=mt.inputerId
+        <where>
+            <if test="groupNo!=null">
+                and groupNo like "%"#{groupNo}"%"
+            </if>
+            <if test="groupName!=null">
+                and groupName like "%"#{groupName}"%"
+            </if>
+        </where>
+    </select>
+    <insert id="addMeterialGroup">
+        insert into meterial_group(
+            groupNo,groupName,groupDesc,ruleNo,
+            inputerId,createDate
+        )
+        values(#{groupNo},#{groupName},#{groupDesc},#{ruleNo},
+        #{inputerId},now())
+    </insert>
+    <update id="updateMeterialGroup">
+        update meterial_group
+        <set>
+            <if test="groupNo!=null">
+                groupNo=#{groupNo},
+            </if>
+            <if test="groupName!=null">
+                groupName=#{groupName},
+            </if>
+            <if test="groupDesc!=null">
+                groupDesc=#{groupDesc},
+            </if>
+            <if test="ruleNo!=null">
+                ruleNo=#{ruleNo},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delMeterialGroup">
+        delete from meterial_group where id=#{id}
+    </delete>
+</mapper>

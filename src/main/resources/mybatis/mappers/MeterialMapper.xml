@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.gec.mapper.MeterialMapper">
+
+    <select id="getList" resultMap="materialMap">
+        SELECT
+        m.*,u.username,u.account,mg.groupName,ms.secondaryName,mt.typeName
+        FROM meterial m
+        LEFT JOIN meterial_group mg ON m.groupNo = mg.groupNo
+        LEFT JOIN meterial_secondary ms ON m.secondaryNo = ms.secondaryNo
+        LEFT JOIN meterial_type mt ON m.typeNo = mt.typeNo
+        LEFT JOIN user u ON u.id = m.inputerId
+        <where>
+            <if test="groupName!=null">
+                and mg.groupName like "%" #{groupName} "%"
+            </if>
+            <if test="secondaryName!=null">
+                and ms.secondaryName like "%" #{secondaryName} "%"
+            </if>
+            <if test="typeName!=null">
+                and mt.typeName like "%" #{typeName} "%"
+            </if>
+            <if test="meterialName!=null">
+                and m.meterialName like "%" #{meterialName} "%"
+            </if>
+            <if test="meterialNo!=null">
+                and m.meterialNo like "%" #{meterialNo} "%"
+            </if>
+        </where>
+    </select>
+
+    <resultMap type="com.gec.domain.Meterial" id="materialMap">
+        <id column="id" property="id"/>
+        <result column="meterialNo" property="meterialNo"/>
+        <result column="meterialName" property="meterialName"/>
+        <result column="typeNo" property="typeNo"/>
+        <result column="secondaryNo" property="secondaryNo"/>
+        <result column="groupNo" property="groupNo"/>
+        <result column="specification" property="specification"/>
+        <result column="inputerId" property="inputerId"/>
+        <result column="status" property="status"/>
+        <result column="version" property="version"/>
+        <result column="createDate" property="createDate"/>
+
+        <!-- User user 关联项目 -->
+        <association property="user" javaType="com.gec.domain.User">
+            <id column="inputerId" property="id"/>
+            <result column="account" property="account"/>
+            <result column="password" property="password"/>
+            <result column="userName" property="userName"/>
+            <result column="email" property="email"/>
+            <result column="sex" property="sex"/>
+            <result column="deptId" property="deptId"/>
+            <result column="no" property="no"/>
+            <result column="createDate" property="createDate"/>
+        </association>
+
+        <!-- MaterialGroup materialGroup 关联项目 -->
+        <association property="meterialGroup" javaType="com.gec.domain.MeterialGroup">
+            <id column="groupNo" property="groupNo"/>
+            <result column="groupName" property="groupName"/>
+            <result column="groupDesc" property="groupDesc"/>
+            <result column="note" property="note"/>
+            <result column="inputerId" property="inputerId"/>
+            <result column="createDate" property="createDate"/>
+        </association>
+
+        <!-- MaterialSecondary materialSecondary 关联项目 -->
+        <association property="meterialSecondary" javaType="com.gec.domain.MeterialSecondary">
+            <id column="secondaryNo" property="secondaryNo"/>
+            <result column="secondaryName" property="secondaryName"/>
+            <result column="typeDesc" property="typeDesc"/>
+            <result column="ruleNo" property="ruleNo"/>
+            <result column="inputerId" property="inputerId"/>
+            <result column="createDate" property="createDate"/>
+        </association>
+
+        <!-- MaterialType meterialType 关联项目 -->
+        <association property="meterialType" javaType="com.gec.domain.MeterialType">
+            <id column="typeNo" property="typeNo"/>
+            <result column="typeName" property="typeName"/>
+            <result column="typeDesc" property="typeDesc"/>
+            <result column="ruleNo" property="ruleNo"/>
+            <result column="inputerId" property="inputerId"/>
+            <result column="createDate" property="createDate"/>
+        </association>
+
+    </resultMap>
+    <update id="updateMeterial">
+        update meterial set meterialNo=#{meterialNo}, meterialName=#{meterialName},
+    typeNo=#{typeNo}, secondaryNo=#{secondaryNo},
+    groupNo=#{groupNo}, specification=#{specification},
+    inputerId=#{inputerId}, status=#{status}, version=#{version} 
+    where id = #{id}
+    </update>
+
+    <insert id="addMeterial">
+        insert into meterial (
+            id,meterialNo,meterialName,typeNo,secondaryNo,
+            groupNo,specification,inputerId,status,version,createDate
+        )
+        values(#{id},#{meterialNo},#{meterialName},#{typeNo},#{secondaryNo},#{groupNo}
+        ,#{specification},#{inputerId},#{status},#{version},now())
+    </insert>
+    <select id="getlastIndex" resultType="int">
+        select id from meterial order by id desc limit 0,1
+    </select>
+
+    <delete id="delMeterial">
+        delete from meterial where id=#{id}
+    </delete>
+
+    <select id="getMeterialList" resultType="com.gec.domain.Meterial">
+        SELECT
+        m.*
+        FROM meterial m
+        LEFT JOIN meterial_group mg ON m.groupNo = mg.groupNo
+        LEFT JOIN meterial_secondary ms ON m.secondaryNo = ms.secondaryNo
+        LEFT JOIN meterial_type mt ON m.typeNo = mt.typeNo
+        <where>
+            <if test="groupName!=null">
+                and mg.groupName like "%" #{groupName} "%"
+            </if>
+            <if test="secondaryName!=null">
+                and ms.secondaryName like "%" #{secondaryName} "%"
+            </if>
+            <if test="typeName!=null">
+                and mt.typeName like "%" #{typeName} "%"
+            </if>
+            <if test="meterialName!=null">
+                and m.meterialName like "%" #{meterialName} "%"
+            </if>
+            <if test="meterialNo!=null">
+                and m.meterialNo like "%" #{meterialNo} "%"
+            </if>
+        </where>
+    </select>
+
+</mapper>
