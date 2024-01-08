@@ -6,7 +6,8 @@
 		○ springboot+mybatis，mybatis作为持久层框架分离了业务代码和数据库代码，同时结合了xml配置开发，降低维护成本，且sql代码更灵活
 		○ 使用redis对用户的token进行缓存
 		○ spring security作为安全框架
-		该项目为mybatis的后端部分，mybatis-browser为前端部分
+		该项目为mybatis的后端部分
+  		mybatis-browser为前端:https://github.com/heixny/mybatis-browser-.git
 
 
 
